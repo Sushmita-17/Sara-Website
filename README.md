@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sara Worldwide Chatbot 🌿
 
 Full-stack e-commerce platform and AI Chatbot for **Sara World Business Pvt. Ltd.**
@@ -49,3 +50,6 @@ The website will be available at [http://localhost:8000](http://localhost:8000).
 - **Backend**: FastAPI, MySQL, Google Generative AI (Gemini).
 - **Frontend**: HTML5, Vanilla CSS, Vanilla JavaScript.
 - **Tools**: Docker, VS Code.
+=======
+# Sara-Website
+>>>>>>> 47f703ba180bb5e83cdd7be8c613cbdcd685e50f
