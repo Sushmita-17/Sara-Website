@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: sara_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sara_chatbot_db
+      MYSQL_ROOT_PASSWORD: "sara_root_password"
+      # Optional: if you want a non-root user later
+      # MYSQL_USER: sara
+      # MYSQL_PASSWORD: sara_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: sara_backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: "sara_root_password"
+      DB_NAME: sara_chatbot_db
+      # SMTP/JWT/Google vars can be added as needed
+      # JWT_SECRET: your_secret
+    ports:
+      - "8000:8000"
+
+volumes:
+  db_data:
+

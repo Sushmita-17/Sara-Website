@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Register | Sara Foods</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); display:flex; align-items:center; justify-content:center; min-height:100vh; padding:40px 20px;">
+
+<div class="product-card" style="width:100%; max-width:480px; padding:48px; box-shadow:var(--shadow-lg);">
+    <div style="text-align:center; margin-bottom:32px;">
+        <a href="/" style="text-decoration:none; display:inline-flex; align-items:center; gap:12px; color:var(--brand-primary); font-weight:800; font-size:1.8rem; margin-bottom:16px;">
+            <img src="avatar.png" alt="Sara Foods" style="height:48px; width:48px; border-radius:50%; border:2px solid var(--brand-accent);">
+            Sara Foods
+        </a>
+        <h1 style="font-size:1.8rem; color:var(--text-dark); margin-bottom:8px;">Create Account</h1>
+        <p style="color:var(--text-muted); font-size:0.95rem;">Join our community of natural health lovers</p>
+    </div>
+
+    <div id="reg-alert" class="badge" style="display:none; width:100%; padding:12px; margin-bottom:24px; text-align:center;"></div>
+
+    <form id="register-form">
+        <div style="margin-bottom:20px;">
+            <label for="reg-name" style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:8px; color:var(--text-dark);">Full Name</label>
+            <input type="text" id="reg-name" placeholder="John Doe" required style="width:100%; padding:14px 20px; border-radius:var(--radius); border:1.5px solid var(--border); outline:none; font-family:inherit; transition:border-color 0.3s;">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label for="reg-email" style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:8px; color:var(--text-dark);">Email Address</label>
+            <input type="email" id="reg-email" placeholder="name@example.com" required style="width:100%; padding:14px 20px; border-radius:var(--radius); border:1.5px solid var(--border); outline:none; font-family:inherit; transition:border-color 0.3s;">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label for="reg-pass" style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:8px; color:var(--text-dark);">Password</label>
+            <input type="password" id="reg-pass" placeholder="Create a strong password" required style="width:100%; padding:14px 20px; border-radius:var(--radius); border:1.5px solid var(--border); outline:none; font-family:inherit; transition:border-color 0.3s;">
+        </div>
+        <div style="margin-bottom:32px;">
+            <label for="reg-confirm" style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:8px; color:var(--text-dark);">Confirm Password</label>
+            <input type="password" id="reg-confirm" placeholder="Confirm your password" required style="width:100%; padding:14px 20px; border-radius:var(--radius); border:1.5px solid var(--border); outline:none; font-family:inherit; transition:border-color 0.3s;">
+        </div>
+        
+        <button type="submit" id="reg-btn" class="cta-btn" style="width:100%; padding:16px; font-size:1rem;">Create Account</button>
+    </form>
+
+    <div style="display:flex; align-items:center; margin:32px 0; color:var(--text-muted); font-size:0.85rem;">
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+        <span style="padding:0 16px;">or register with</span>
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+    </div>
+
+    <button class="secondary-btn btn-google" style="width:100%; display:flex; align-items:center; justify-content:center; gap:12px; padding:14px; border-radius:50px; background:white;">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="height:20px;">
+        Register with Google
+    </button>
+
+    <div style="text-align:center; margin-top:32px; font-size:0.95rem; color:var(--text-muted);">
+        Already have an account? <a href="login.html" style="color:var(--brand-primary); font-weight:700; text-decoration:none;">Sign In</a>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    document.querySelectorAll('input').forEach(input => {
+        input.onfocus = () => input.style.borderColor = 'var(--brand-primary)';
+        input.onblur = () => input.style.borderColor = 'var(--border)';
+    });
+</script>
+</body>
+</html>
