@@ -1,5 +1,5 @@
 // ── Constants ─────────────────────────────────────────────────────────────────
-const API = 'http://localhost:8000/api';
+const API = window.SARA_API || ((window.location.origin || 'http://localhost:8000') + '/api');
 
 // ── Auth helpers ──────────────────────────────────────────────────────────────
 function getToken() { return localStorage.getItem('sara_token'); }
@@ -173,16 +173,6 @@ async function handlePayment() {
 
 // ── On load ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-    // Check for Google OAuth token in URL
-    var params = new URLSearchParams(window.location.search);
-    var urlToken = params.get('token');
-    var urlName  = params.get('name');
-    var urlRole  = params.get('role');
-    if (urlToken) {
-        setAuth(urlToken, urlName || 'User', urlRole || 'customer');
-        window.history.replaceState({}, document.title, '/');
-    }
-
     updateNavAuth();
     updateCartBadge();
     initSearch();

@@ -1,5 +1,6 @@
 import secrets, hashlib
 from datetime import datetime, timedelta
+from urllib.parse import quote
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import RedirectResponse, JSONResponse
 from pydantic import BaseModel, EmailStr
@@ -117,8 +118,11 @@ async def google_callback(code: str):
 
     conn.close()
     token = create_token({"sub": str(user_id), "email": email, "name": name, "role": role})
-    # Redirect to frontend with token and role
-    return RedirectResponse(f"{FRONTEND_URL}/?token={token}&name={name}&role={role}")
+    # Dedicated callback page (same origin as app — avoids localhost:5500 iframe errors)
+    safe_name = quote(name or "User")
+    return RedirectResponse(
+        f"{FRONTEND_URL}/auth-callback.html?token={token}&name={safe_name}&role={role}"
+    )
 
 
 # ── Me ────────────────────────────────────────────────────────────────────────

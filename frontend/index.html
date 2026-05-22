@@ -4,28 +4,38 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Sara Foods | Organic Health Store – Kathmandu, Nepal</title>
 <meta name="description" content="Sara World Business – Premium organic food, natural cosmetics, spiritual items and nursery plants. Kalanki-14, Kathmandu.">
-<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=responsive1">
 </head>
 <body>
 
 <!-- NAVBAR -->
 <header class="navbar">
   <div class="nav-container">
-    <a href="/" class="logo"><img src="avatar.png" alt="Sara Foods">Sara Foods</a>
+    <a href="/" class="logo"><img src="avatar.png" alt="Sara Foods"><span>Sara Foods</span></a>
     
-    <div class="search-wrapper">
+    <div class="search-wrapper nav-desktop-only">
       <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       <input type="text" id="global-search" placeholder="Search products...">
     </div>
 
-    <nav>
+    <nav class="nav-desktop-only">
       <a href="/" class="active">Home</a>
       <a href="products.html">Shop</a>
-      <a href="admin.html" id="nav-admin" style="display:none; color:var(--brand-accent);">Dashboard</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="faq.html">FAQ</a>
+      <a href="feedback.html">Reviews</a>
+      <a href="admin.html" id="nav-admin" style="display:none;color:var(--brand-accent);">Dashboard</a>
       <a href="#contact">Contact</a>
     </nav>
 
     <div class="nav-actions">
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <button class="cart-btn" id="cart-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
         Cart <span class="cart-badge">0</span>
@@ -43,27 +53,96 @@
     </div>
   </div>
 </header>
+<div class="nav-overlay" id="nav-overlay"></div>
+<aside class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <div class="nav-drawer-head">
+    <span class="logo-text">Sara Foods</span>
+    <button type="button" id="nav-drawer-close" aria-label="Close menu">✕</button>
+  </div>
+  <a href="/">Home</a>
+  <a href="products.html">Shop</a>
+  <a href="about.html">About</a>
+  <a href="services.html">Services</a>
+  <a href="faq.html">FAQ</a>
+  <a href="feedback.html">Reviews</a>
+  <a href="#contact">Contact</a>
+  <a href="login.html">Login</a>
+</aside>
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
   <div class="hero-content">
-    <div class="hero-badge">✨ Luxury Organic Experience</div>
+    <div class="hero-badge">✨ Himalayan Organic Luxury</div>
     <h1>Purely Organic,<br><span>Deeply Healthy.</span></h1>
-    <p>Discover Nepal's finest selection of handpicked organic superfoods, natural beauty essentials, and spiritual treasures.</p>
+    <p>Premium superfoods, natural beauty &amp; spiritual wellness — sourced from the Himalayan foothills.</p>
     
     <div class="hero-actions">
-      <a href="products.html" class="cta-btn">Explore Collection</a>
-      <a href="#featured" class="secondary-btn" style="border:none; text-decoration:underline;">View Featured</a>
+      <a href="products.html" class="cta-btn cta-glow">Shop All Products</a>
+      <a href="#featured" class="secondary-btn">Featured Collections</a>
     </div>
 
     <div class="hero-stats">
-      <div class="stat"><strong>300+</strong><span>Products</span></div>
-      <div class="stat"><strong>100%</strong><span>Natural</span></div>
+      <div class="stat"><strong id="stat-products">280+</strong><span>Products</span></div>
+      <div class="stat"><strong id="trust-image-count">251+</strong><span>Store Photos</span></div>
       <div class="stat"><strong>24/7</strong><span>AI Support</span></div>
     </div>
   </div>
   <div class="hero-image">
-    <img src="prod_moringa.png" alt="Organic products" class="hero-img">
+    <div class="hero-collage" id="hero-collage" aria-hidden="true">
+      <div class="hero-collage-main skeleton-hero"></div>
+      <div class="hero-collage-side">
+        <div class="hero-collage-tile skeleton-hero"></div>
+        <div class="hero-collage-tile skeleton-hero"></div>
+        <div class="hero-collage-tile skeleton-hero"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCT SLIDER -->
+<section class="product-slider" aria-label="Featured products">
+  <div class="product-slider-glow" aria-hidden="true"></div>
+  <div class="product-slider-head">
+    <div class="product-slider-title-wrap">
+      <span class="product-slider-eyebrow">✨ Customer favourites</span>
+      <h2 class="product-slider-title">Our Signature Products</h2>
+    </div>
+    <p class="product-slider-hint">Slow scroll · hover to pause · tap to shop</p>
+  </div>
+  <div class="product-slider-stage">
+    <div class="marquee-fade marquee-fade--left" aria-hidden="true"></div>
+    <div class="marquee-fade marquee-fade--right" aria-hidden="true"></div>
+    <div class="marquee-wrap">
+      <div class="marquee-track" id="marquee-track">
+        <a class="marquee-item" href="product.html?name=Moringa%20Powder">
+          <div class="marquee-item-img-wrap"><span class="marquee-item-tag">Superfood</span><img src="https://saraworldwide.com.np/wp-content/uploads/2017/04/fina.jpg" alt="Moringa Powder" decoding="async"></div>
+          <div class="marquee-item-body"><span class="marquee-item-label">Moringa Powder</span><span class="marquee-item-cta">View product</span></div>
+        </a>
+        <a class="marquee-item" href="product.html?name=Shilajit">
+          <div class="marquee-item-img-wrap"><span class="marquee-item-tag">Himalayan</span><img src="https://saraworldwide.com.np/wp-content/uploads/2024/06/shw.jpg" alt="Shilajit" decoding="async"></div>
+          <div class="marquee-item-body"><span class="marquee-item-label">Shilajit</span><span class="marquee-item-cta">View product</span></div>
+        </a>
+        <a class="marquee-item" href="product.html?name=Ginseng">
+          <div class="marquee-item-img-wrap"><span class="marquee-item-tag">Energy</span><img src="https://saraworldwide.com.np/wp-content/uploads/2026/01/WhatsApp-Image-2026-01-02-at-5.09.07-PM.jpeg" alt="Ginseng" decoding="async"></div>
+          <div class="marquee-item-body"><span class="marquee-item-label">Ginseng</span><span class="marquee-item-cta">View product</span></div>
+        </a>
+        <a class="marquee-item" href="product.html?name=Wild%20Honey">
+          <div class="marquee-item-img-wrap"><span class="marquee-item-tag">Organic</span><img src="https://saraworldwide.com.np/wp-content/uploads/2025/02/wh.jpg" alt="Wild Honey" decoding="async"></div>
+          <div class="marquee-item-body"><span class="marquee-item-label">Wild Honey</span><span class="marquee-item-cta">View product</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="trust-strip">
+  <div class="section-container trust-strip-inner">
+    <div class="trust-item"><span class="trust-mark" aria-hidden="true">01</span><div><strong>100%</strong><span>Organic range</span></div></div>
+    <div class="trust-item"><span class="trust-mark" aria-hidden="true">02</span><div><strong id="trust-strip-count">280+</strong><span>Premium products</span></div></div>
+    <a href="https://www.google.com/maps/search/?api=1&query=Sara+Worldwide+Business+Kalanki-14+Kathmandu+Nepal" target="_blank" rel="noopener" class="trust-item trust-item-link"><span class="trust-mark" aria-hidden="true">03</span><div><strong>Sara Worldwide Business</strong><span>Kalanki-14 · Google Maps</span></div></a>
+    <div class="trust-item"><span class="trust-mark" aria-hidden="true">04</span><div><strong>Nationwide</strong><span>Delivery Nepal</span></div></div>
   </div>
 </section>
 
@@ -72,7 +151,15 @@
   <div class="section-container">
     <div class="section-header">
       <h2 class="section-title">Featured Collections</h2>
-      <p class="section-sub">Sourced directly from the Himalayan foothills</p>
+      <p class="section-sub">Category wise — original product images by name</p>
+    </div>
+
+    <div class="filter-bar featured-cat-tabs" id="featured-cat-tabs" role="tablist" aria-label="Filter by category">
+      <button type="button" class="filter-chip featured-cat active" data-cat="all">All</button>
+      <button type="button" class="filter-chip featured-cat" data-cat="A">Organic Food</button>
+      <button type="button" class="filter-chip featured-cat" data-cat="B">Natural Cosmetics</button>
+      <button type="button" class="filter-chip featured-cat" data-cat="C">Spiritual Wellness</button>
+      <button type="button" class="filter-chip featured-cat" data-cat="D">Sara Nursery</button>
     </div>
     
     <div class="product-grid" id="main-product-grid">
@@ -83,71 +170,103 @@
       <div class="skeleton-card"></div>
     </div>
 
-    <div style="text-align:center; margin-top:60px;">
-      <a href="products.html" class="cta-btn">View Full Catalog →</a>
+    <div class="index-featured-cta">
+      <a href="products.html" class="cta-btn">Shop All Products →</a>
     </div>
   </div>
 </section>
 
 <!-- CATEGORIES -->
-<section style="padding:100px 0; background:white;">
+<section class="category-showcase">
   <div class="section-container">
     <div class="section-header">
       <h2 class="section-title">Shop by Category</h2>
-      <p class="section-sub">Every product is a promise of purity</p>
+      <p class="section-sub">Organic food, natural beauty, spiritual wellness &amp; nursery</p>
     </div>
-    
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:30px;">
-      <div class="product-card" style="text-align:center; padding:40px;">
-        <div style="font-size:3rem; margin-bottom:20px;">🥗</div>
-        <h3>Organic Food</h3>
-        <p class="p-cat">Seeds, Superfood Powders, Cold-pressed Oils</p>
-        <a href="products.html" class="cta-btn" style="padding:10px 24px; font-size:0.9rem; margin-top:20px;">Browse Food</a>
-      </div>
-      <div class="product-card" style="text-align:center; padding:40px;">
-        <div style="font-size:3rem; margin-bottom:20px;">💄</div>
-        <h3>Natural Beauty</h3>
-        <p class="p-cat">Herbal Soaps, Shampoos, Skin Care</p>
-        <a href="products.html" class="cta-btn" style="padding:10px 24px; font-size:0.9rem; margin-top:20px;">Browse Beauty</a>
-      </div>
-      <div class="product-card" style="text-align:center; padding:40px;">
-        <div style="font-size:3rem; margin-bottom:20px;">🙏</div>
-        <h3>Spiritual Wellness</h3>
-        <p class="p-cat">Rudraksha, Gems, Stones, Idols</p>
-        <a href="products.html" class="cta-btn" style="padding:10px 24px; font-size:0.9rem; margin-top:20px;">Browse Spiritual</a>
-      </div>
+    <div class="category-cards">
+      <a href="products.html?cat=A" class="category-card" id="cat-food">
+        <div class="category-card-bg"></div>
+        <div class="category-card-content">
+          <span class="category-label">Category A</span>
+          <h3>Organic Food</h3>
+          <p>Seeds, superfood powders, cold-pressed oils</p>
+          <span class="category-link">Browse Food →</span>
+        </div>
+      </a>
+      <a href="products.html?cat=B" class="category-card" id="cat-beauty">
+        <div class="category-card-bg"></div>
+        <div class="category-card-content">
+          <span class="category-label">Category B</span>
+          <h3>Natural Beauty</h3>
+          <p>Herbal soaps, aloe gels, skin care</p>
+          <span class="category-link">Browse Beauty →</span>
+        </div>
+      </a>
+      <a href="products.html?cat=C" class="category-card" id="cat-spiritual">
+        <div class="category-card-bg"></div>
+        <div class="category-card-content">
+          <span class="category-label">Category C</span>
+          <h3>Spiritual Wellness</h3>
+          <p>Rudraksha, gems, Himalayan treasures</p>
+          <span class="category-link">Browse Spiritual →</span>
+        </div>
+      </a>
+      <a href="products.html?cat=D" class="category-card" id="cat-nursery">
+        <div class="category-card-bg"></div>
+        <div class="category-card-content">
+          <span class="category-label">Category D</span>
+          <h3>Sara Nursery</h3>
+          <p>Herbal &amp; fruit plants</p>
+          <span class="category-link">Browse Nursery →</span>
+        </div>
+      </a>
     </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Client Reviews</h2>
+      <p class="section-sub">Trusted by customers across Nepal</p>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card"><div class="stars">★★★★★</div><p>All products are very nutritious and healthy. Thanks Sara!</p><strong>— Shyam Kumar</strong></div>
+      <div class="review-card"><div class="stars">★★★★★</div><p>Quality Moringa and Wild Honey. Highly recommended.</p><strong>— Ram Kumar</strong></div>
+      <div class="review-card"><div class="stars">★★★★☆</div><p>Excellent organic range at Kalanki store.</p><strong>— Kiran Pahadi</strong></div>
+    </div>
+    <p style="text-align:center;margin-top:32px;"><a href="feedback.html" class="cta-btn">Read all reviews & leave feedback</a></p>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section class="contact-section" id="contact" style="background:var(--brand-primary); padding:120px 0;">
+<section class="contact-section" id="contact">
   <div class="section-container">
-    <div class="section-header">
-      <h2 class="section-title" style="color:white;">Visit Our Store</h2>
-      <p class="section-sub" style="color:rgba(255,255,255,0.7);">Experience the purity in person at our Kathmandu flagship store</p>
+    <div class="section-header contact-header">
+      <h2 class="section-title">Visit Our Store</h2>
+      <p class="section-sub">Experience the purity in person at our Kathmandu flagship store</p>
     </div>
-    
-    <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:80px; align-items: center;">
-      <div style="color:white;">
-        <h3 style="font-size:1.8rem; margin-bottom:24px;">Sara World Business Pvt. Ltd.</h3>
-        <p style="font-size:1.1rem; margin-bottom:12px; opacity:0.9;">📍 Kalanki-14, Kathmandu, Nepal</p>
-        <p style="font-size:1.1rem; margin-bottom:12px; opacity:0.9;">📞 +977 1 5225181</p>
-        <p style="font-size:1.1rem; margin-bottom:12px; opacity:0.9;">📧 info@saraworldwide.com.np</p>
-        
-        <div style="display:flex; gap:15px; margin-top:40px;">
-          <a href="https://wa.me/9779851105234" target="_blank" class="cta-btn" style="background:white; color:var(--brand-primary); padding:12px 24px;">WhatsApp Us</a>
-          <a href="https://www.facebook.com/saraworldwide.com.np/" target="_blank" class="cta-btn" style="background:transparent; border:1px solid white; padding:12px 24px;">Facebook</a>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Sara Worldwide Business Pvt. Ltd.</h3>
+        <p>📍 Kalanki-14, Kathmandu, Nepal</p>
+        <p><a href="https://www.google.com/maps/search/?api=1&query=Sara+Worldwide+Business+Kalanki-14+Kathmandu+Nepal" target="_blank" rel="noopener" style="color:var(--brand-accent);">View on Google Maps →</a></p>
+        <p>📞 +977 1 5225181 · +977 9851105234</p>
+        <p>📧 info@saraworldwide.com.np</p>
+        <div class="contact-btns">
+          <a href="https://wa.me/9779851105234" target="_blank" rel="noopener" class="cta-btn cta-invert">WhatsApp Us</a>
+          <a href="https://saraworldwide.com.np/" target="_blank" rel="noopener" class="secondary-btn secondary-invert">Official Website</a>
         </div>
       </div>
-      <div style="border-radius:24px; overflow:hidden; box-shadow:var(--shadow-lg);">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.8344158226!2d85.2818!3d27.6932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb18635848c087%3A0x67399426f4370597!2sKalanki%2C%20Kathmandu!5e0!3m2!1sen!2snp" width="100%" height="400" style="border:0;" allowfullscreen loading="lazy"></iframe>
+      <div class="contact-map">
+        <iframe src="https://www.google.com/maps?q=Sara+Worldwide+Business+Pvt+Ltd,+Kalanki-14,+Kathmandu,+Nepal&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy" title="Sara Worldwide Business — Kalanki-14"></iframe>
       </div>
     </div>
   </div>
 </section>
 
-<footer style="background:#032f24; color:rgba(255,255,255,0.5); text-align:center; padding:40px 20px; font-size:0.9rem;">
+<footer class="site-footer">
   <div class="section-container">
     <p>© 2024 Sara World Business Pvt. Ltd. | Kalanki-14, Kathmandu, Nepal</p>
     <p style="margin-top:10px; font-size:0.8rem;">Empowering local farmers and promoting sustainable health through Himalayan nature.</p>
@@ -187,7 +306,7 @@
 
       <div id="qr-display" style="display:none; text-align:center; margin-top:24px; padding:20px; border:2px dashed var(--border); border-radius:20px;">
         <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">Scan this QR code to pay via Fonepay or any bank app</p>
-        <img src="qr-code.png" alt="Merchant QR" style="width:200px; height:200px; border-radius:12px;">
+        <img src="qr-code.svg" alt="Merchant QR" width="200" height="200" style="width:200px; height:200px; border-radius:12px; background:#fff;">
         <p style="margin-top:16px; font-weight:700; color:var(--brand-primary);">Sara World Business Pvt. Ltd.</p>
       </div>
     </div>
@@ -253,18 +372,22 @@
 </div>
 
 <!-- SOCIAL SIDEBAR -->
-<div class="social-sidebar" style="position:fixed; left:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:15px; z-index:100;">
+<div class="social-sidebar">
   <a href="https://wa.me/9779851105234" target="_blank" style="width:44px; height:44px; background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="24" height="24"></a>
   <a href="https://m.me/saraworldwide.com.np" target="_blank" style="width:44px; height:44px; background:#0084FF; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);"><img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg" width="24" height="24"></a>
   <a href="https://www.instagram.com/saraworldwide/" target="_blank" style="width:44px; height:44px; background:linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" width="24" height="24"></a>
 </div>
 
+<script src="js/site.js"></script>
+<script src="js/images.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/nav.js"></script>
 <script src="js/main.js"></script>
-<script src="script.js"></script> <!-- Re-using existing chatbot script logic -->
+<script src="js/chatbot-widget.js?v=fix5"></script>
+<script src="js/home-gallery.js?v=slider2"></script>
+<script src="script.js?v=fix5"></script>
 <script>
-// Specialized script for index page hero stats and featured loading
 document.addEventListener('DOMContentLoaded', function() {
-    // Update Nav based on user state
     const user = getUser();
     if (user) {
         document.getElementById('nav-guest').style.display = 'none';

@@ -51,9 +51,13 @@
     </div>
 </div>
 
+<script src="js/site.js"></script>
 <script src="js/main.js"></script>
 <script src="js/auth.js"></script>
 <script>
+    var err = new URLSearchParams(location.search).get('error');
+    if (err) showAlert(document.getElementById('login-alert'), 'Google sign-in failed. Use email login or try again.', 'error');
+
     const emailInput = document.getElementById('login-email');
     const passInput = document.getElementById('login-pass');
     

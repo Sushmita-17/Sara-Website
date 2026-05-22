@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Signing in… | Sara Foods</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-light);">
+  <div class="product-card" style="padding:48px;text-align:center;max-width:400px;">
+    <img src="avatar.png" alt="Sara" style="height:64px;border-radius:50%;margin-bottom:20px;">
+    <h2>Completing Google sign-in…</h2>
+    <p style="color:var(--text-muted);margin-top:12px;">Please wait.</p>
+  </div>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var token = params.get('token');
+      var name = params.get('name') || 'User';
+      var role = params.get('role') || 'customer';
+      var err = params.get('error');
+      if (token) {
+        setAuth(token, decodeURIComponent(name), role);
+        window.location.replace('/');
+        return;
+      }
+      window.location.replace('/login.html' + (err ? '?error=' + encodeURIComponent(err) : ''));
+    })();
+  </script>
+</body>
+</html>

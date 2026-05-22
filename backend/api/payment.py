@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List
 from ..db.database import get_db
 from ..services.auth_service import get_current_user
-from ..config import ESEWA_PRODUCT_CODE, ESEWA_SECRET_KEY, ESEWA_URL
+from ..config import ESEWA_PRODUCT_CODE, ESEWA_SECRET_KEY, ESEWA_URL, FRONTEND_URL
 
 router = APIRouter(prefix="/payment", tags=["payment"])
 
@@ -56,8 +56,8 @@ async def initiate_payment(order: OrderInitiate, current_user: dict = Depends(ge
                 "product_code": ESEWA_PRODUCT_CODE,
                 "product_service_charge": "0",
                 "product_delivery_charge": "0",
-                "success_url": "http://localhost:5500/success.html", # Should be frontend URL
-                "failure_url": "http://localhost:5500/failure.html",
+                "success_url": f"{FRONTEND_URL}/success.html",
+                "failure_url": f"{FRONTEND_URL}/failure.html",
                 "signed_field_names": "total_amount,transaction_uuid,product_code",
                 "signature": signature
             }

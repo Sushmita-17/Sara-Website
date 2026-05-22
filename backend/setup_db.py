@@ -31,7 +31,7 @@ CATALOG = {
             "Beet root powder",
             "Amala Powder",
             "Aleovera powder",
-            "Hibiscus power",
+            "Hibiscus powder",
             "Licorice powder",
             "Senna powder",
             "Giloypowder",
@@ -330,8 +330,8 @@ CATALOG = {
         ],
     },
     "Category C: Spirituals": {
-        "Spirutuals": [
-            "Rudrakcha",
+        "Spirituals": [
+            "Rudraksha",
             "BudhaChitta",
             "Sphatik",
             "Gems",
@@ -340,7 +340,7 @@ CATALOG = {
             "Shivalinga",
             "Natural Astrilogy Gem Stone",
             "Coins (God & Goddess)",
-            "Idols/Stutue(d\"lt{)",
+            "Religious Idols",
         ],
     },
     "Category D: Sara Nursery": {
@@ -368,6 +368,7 @@ BENEFITS = {
     "Turmeric powder": "Anti-inflammatory and antioxidant. Supports joint and liver health.",
     "Spirulina powder": "Complete plant protein. Excellent for detox and immune support.",
     "Aloe vera fresh juice": "Soothes digestion, improves skin and supports liver detox.",
+    "Aloevera fresh juice": "Soothes digestion, improves skin and supports liver detox.",
 }
 
 
@@ -399,6 +400,12 @@ def setup():
     db_name = DB_CONFIG.get("database")
     port = base_cfg.get("port")
 
+    # Docker-friendly defaults: if user runs this script on host machine
+    # but MySQL runs in docker-compose, DB_HOST is often set to `db`.
+    # If we can't connect, show an additional hint.
+    docker_host_hint = "db" if host != "db" else None
+
+
     max_retries = 5
     retry_delay_sec = 2
 
@@ -423,7 +430,10 @@ def setup():
         print("\n[DB SEED] Connection failed after retries.")
         print("[DB SEED] Fix DB_HOST/DB_USER/DB_PASSWORD, ensure MySQL is installed and running, and that MySQL listens on the expected host/port.")
         print(f"[DB SEED] Active DB_CONFIG: {DB_CONFIG}")
+        if docker_host_hint:
+            print("[DB SEED] Hint: docker-compose uses DB_HOST=db. If you are running this from host machine, set DB_HOST=db OR run this script inside the backend container.")
         raise last_err
+
 
     cur = conn.cursor()
     cur.execute(f"CREATE DATABASE IF NOT EXISTS {DB_CONFIG['database']} DEFAULT CHARACTER SET 'utf8mb4'")
@@ -510,6 +520,18 @@ def setup():
     )
     cur.execute(
         """
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255),
+            rating INT DEFAULT 5,
+            message TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """
+    )
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS company_info (
             id INT AUTO_INCREMENT PRIMARY KEY,
             info_key VARCHAR(100) UNIQUE,
@@ -522,9 +544,11 @@ def setup():
 
     # Company info
     info = [
-        ("name", "Sara World Business Pvt. Ltd."),
-        ("location", "Kalanki-14, Kathmandu, Nepal"),
+        ("name", "Sara Worldwide Business Pvt. Ltd."),
+        ("location", "Kalanki, Kathmandu, Nepal"),
         ("phone", "+977 1 5225181, +977 9851105234, 9808500141"),
+        ("supervisor", "Shanker Pandey (CEO)"),
+        ("supervisor_email", "pandeyshanker@yahoo.com"),
         ("email", "info@saraworldwide.com.np"),
         ("website", "https://saraworldwide.com.np/saraworldwide"),
         ("facebook", "https://www.facebook.com/saraworldwide.com.np/"),
@@ -536,179 +560,10 @@ def setup():
         )
 
     # Seed categories and products (idempotent via lookup-by-name)
-    # Keyword map: product-name fragments -> Unsplash search term
-    PRODUCT_IMAGE_KEYWORDS = {
-        # Seeds
-        "chia seed": "chia+seeds", "pumpkin seed": "pumpkin+seeds", "quinoa": "quinoa",
-        "sunflower seed": "sunflower+seeds", "flax seed": "flaxseed", "basil seed": "basil+seeds",
-        "watermelon seed": "watermelon+seeds",
+    from product_images import resolve_product_image_url
 
-        # Powders
-        "moringa": "moringa+powder", "gymnema": "herbal+powder", "milk thistle": "milk+thistle",
-        "jamun": "jamun+fruit", "maca": "maca+powder", "isabgol": "psyllium+husk",
-        "mucuna": "herbal+powder", "ashwagandha": "ashwagandha+powder", "asparagus": "asparagus",
-        "spirulina": "spirulina+powder", "arjuna": "herbal+powder", "beet root": "beetroot+powder",
-        "amala": "amla+fruit", "aleovera": "aloe+vera", "aloe vera": "aloe+vera",
-        "hibiscus": "hibiscus+flower", "licorice": "licorice+root", "senna": "herbal+leaves",
-        "giloy": "giloy+plant", "giloypowder": "giloy",
-        "saw palmetto": "herbal+supplement", "baheda": "dried+herbs", "bahedapowder": "baheda",
-        "brahmi": "brahmi+herb",
-        "triphala": "herbal+powder", "triphala powder": "triphala+powder", "triphalapowder": "triphala",
-        "harad": "dried+fruit",
-        "stevia": "stevia+plant", "turmeric": "turmeric+powder", "ritha": "soapnut",
-        "shikakai": "shikakai+powder", "protein powder": "protein+powder",
-        "jaggery": "jaggery", "brown sugar": "brown+sugar",
-
-        # Oils
-        "black seed oil": "black+seed+oil", "hemp seed oil": "hemp+oil",
-        "fenugreek seed oil": "fenugreek", "fenugreekseed oil": "fenugreek",
-        "fennel seed oil": "fennel", "fennelseed oil": "fennel",
-        "dil seed oil": "dill+herb", "dilseed oil": "dill",
-        "sesame seed oil": "sesame+oil", "sesameseed oil": "sesame",
-        "black grape seed oil": "grape+seed+oil", "black grapeseed oil": "grape+seed+oil",
-        "chia seed oil": "chia+seeds", "chiaseed oil": "chia+seeds",
-        "flaxseed oil": "flaxseed+oil", "flaxseed oil": "flaxseed+oil",
-        "castor seed oil": "castor+oil", "castorseed oil": "castor+oil",
-        "neem seed oil": "neem+leaves", "neemseed oil": "neem+leaves",
-        "almond oil": "almond+oil", "walnut oil": "walnut", "onion seed oil": "onion+seeds",
-        "moringa seed oil": "moringa", "thyme seed oil": "thyme+herb",
-        "pumpkin seed oil": "pumpkin+seeds", "rose oil": "rose+oil", "mustard oil": "mustard",
-
-        # Essential Oils
-        "lemon grass oil": "lemongrass", "orange peel oil": "orange+peel",
-        "tea tree oil": "tea+tree", "clove oil": "cloves", "lavender oil": "lavender",
-        "jojoba oil": "jojoba", "jasmine oil": "jasmine+flower", "rosemary oil": "rosemary",
-        "basil seed oil": "basil", "camphor oil": "camphor", "peppermint oil": "peppermint",
-        "timmur oil": "spices", "jatamansi oil": "herbal+oil",
-
-        # Medicinal / Cosmetics
-        "hair growth oil": "hair+oil", "mosquito repellent oil": "mosquito+repellent",
-        "mosquito repellent spray": "mosquito+repellent", "mosquito repellent cream": "mosquito+cream",
-        "pain relief oil": "massage+oil", "body massage oil": "body+massage",
-        "Mosquito Repllents": "mosquito+repellent",
-
-        # Herbs
-        "mint": "mint+leaves", "neem": "neem+leaves", "rose": "rose+flower",
-        "jasmine": "jasmine+flower", "lavender": "lavender+field", "tulsi": "tulsi+plant",
-        "shankhapushpi": "herbal+plant", "punarnava": "herbal+plant", "chirayata": "herbal+plant",
-
-        # Himali
-        "shilajit": "shilajit", "yarsagumba": "cordyceps+mushroom", "honey": "honey+jar",
-        "moringa honey": "honey+moringa", "jamun honey": "honey+jar", "wild honey": "wild+honey",
-        "gucche mushroom": "mushroom", "red mushroom": "red+mushroom", "mushroom": "mushroom",
-        "ginseng": "ginseng+root", "budhachitta": "himalayan+herb", "budhaChitta": "himalayan+herb",
-        "pink salt": "pink+salt",
-        "cinnamon": "cinnamon+sticks", "red rice": "red+rice", "brown rice": "brown+rice",
-        "black rice": "black+rice", "taichin rice": "organic+rice",
-
-        # Mix Herbs
-        "gastric": "herbal+medicine", "heart and diabetes": "herbal+supplement",
-        "sugar control": "herbal+tea", "healthy drinks": "herbal+drink", "good sleep": "chamomile+tea",
-
-        # Juices
-        "fresh juice": "fresh+juice", "cider vinegar": "apple+cider+vinegar",
-        "black strap molasses": "molasses", "noni": "noni+juice", "giloy fresh": "herbal+juice",
-
-        # Microgreens
-        "microgreens": "microgreens", "broccoli": "broccoli+microgreens",
-        "radish": "radish", "pea shoots": "pea+shoots", "kale": "kale",
-        "cabbage": "cabbage", "cauliflower": "cauliflower", "mustard": "mustard+greens",
-        "spinach": "spinach", "swiss chard": "swiss+chard", "carrot": "carrots",
-        "arugula": "arugula", "fennel": "fennel", "celery": "celery",
-
-        # Dehydrated Veg
-        "dehydrated cabbage": "dried+cabbage", "dehydrated potato": "dehydrated+vegetables",
-        "dehydrated kale": "dried+kale", "dehydrated onion": "dried+onion",
-        "dehydrated carrot": "dried+carrots", "dehydrated spinach": "dried+spinach",
-        "dehydrated tomato": "dried+tomatoes", "dehydrated bean": "dried+beans",
-        "dehydrated bell pepper": "dried+bell+pepper", "dehydrated celery": "dried+celery",
-        "dehydrated beetroot": "dried+beetroot", "dehydrated bitter gourd": "bitter+gourd",
-        "dehydrated bottle gourd": "bottle+gourd", "dehydrated peas": "dried+peas",
-        "dehydrated sweet potato": "sweet+potato", "dehydrated brussels": "brussels+sprouts",
-        "dehydrated green bean": "green+beans", "dehydrated mushroom": "dried+mushroom",
-        "dehydrated butternut": "butternut+squash", "dehydrated corn": "dried+corn",
-        "dried wild garlic": "wild+garlic", "dried kashmiri garlic": "garlic",
-
-        # Dehydrated Fruits
-        "amala whole": "amla+fruit", "rhita whole": "soapnut",
-        "dried blueberries": "dried+blueberries", "dried cranberries": "dried+cranberries",
-        "shikakai whole": "shikakai", "almonds": "almonds", "walnuts": "walnuts",
-        "cashew": "cashew+nuts", "pistachios": "pistachios", "raisins": "raisins",
-        "figs": "dried+figs", "dried bananas": "dried+bananas", "dried papayas": "dried+papaya",
-        "coconut flakes": "coconut+flakes", "date palm": "dates+fruit",
-        "dried pears": "dried+pears", "dried kiwis": "kiwi+fruit",
-        "dried pineapples": "dried+pineapple", "dried apples": "dried+apples",
-
-        # Millets
-        "foxtail millet": "millet+grain", "finger millet": "finger+millet",
-        "kodo millet": "millet", "jowar": "sorghum+grain", "pearl millet": "pearl+millet",
-        "barnyard millet": "millet+grain", "little millet": "millet",
-        "buckwheat": "buckwheat", "proso millet": "millet",
-        "amaranth": "amaranth+grain", "naked barley": "barley",
-
-        # Fresh Veg
-        "bell pepper": "bell+peppers", "tomato": "tomatoes", "potato": "potatoes",
-        "cucumber": "cucumber", "yellow squash": "yellow+squash",
-        "green kale": "kale+leaves", "sweet potato": "sweet+potatoes",
-        "green cabbage": "green+cabbage",
-
-        # Cosmetic
-        "sandal powder": "sandalwood+powder", "multani": "clay+powder",
-        "indigo powder": "indigo+powder", "henna": "henna+powder",
-        "rose water": "rose+water", "jasmine water": "jasmine+flower",
-        "vetiver water": "vetiver", "kewada water": "kewra+flower",
-        "sandal water": "sandalwood", "neem water": "neem+leaves",
-        "musk": "musk+perfume", "oud": "oud+perfume",
-        "attar": "perfume+bottle", "perfume": "luxury+perfume",
-        "bhringraj": "herbal+powder", "soaps": "natural+soap",
-        "moringa multani mitti soap": "natural+soap", "moringa neem soap": "natural+soap",
-        "shampoo": "shampoo+bottle", "face wash": "face+wash",
-        "body wash": "body+wash", "aloevera gel": "aloe+vera+gel",
-        "wild turmeric": "turmeric+root", "black turmeric": "black+turmeric",
-
-        # Spirituals
-        "rudraksha": "rudraksha+beads", "sphatik": "crystal+ball",
-        "gems": "gemstone", "stones": "healing+crystals",
-        "shaligram": "shaligram+stone", "shivalinga": "shivling",
-        "gem stone": "gemstone+jewelry", "coins": "gold+coins",
-        "idols": "hindu+idol", "statues": "religious+statue",
-
-        # Nursery
-        "insulin plant": "medicinal+plant", "sindur plant": "herbal+plant",
-        "moringa plant": "moringa+tree", "neem plant": "neem+tree",
-        "serpentine": "medicinal+herb",
-        "guava": "guava+fruit+plant", "papaya": "papaya+tree",
-        "apple ber": "apple+fruit+tree", "dragon fruit": "dragon+fruit+plant",
-        "custard apple": "custard+apple", "mango": "mango+tree",
-        "litchi": "lychee+tree", "lemon": "lemon+tree",
-
-    }
-
-    # Optional overrides for specific products (set to your provided image URLs)
-    PRODUCT_IMAGE_OVERRIDES = {
-        "Chia seed": "https://thfvnext.bing.com/th/id/OIP.KYZ3HZu-ogCAZr7ELozdVAHaHa?w=184&h=184&c=7&r=0&o=7&cb=thfvnext&dpr=1.3&pid=1.7&rm=3",
-        "Moringa powder": "https://img.drz.lazcdn.com/static/np/p/8118f5d263b4ef4ae98ef9dc261d1b00.jpg_720x720q80.jpg",
-        "Wild Honey": "https://sarafoods.co.in/wp-content/uploads/2023/07/01-HONEY-500-250-120-GM.jpg",
-    }
-
-    def get_image_url(product_name: str, cat_name: str) -> str:
-        # Exact-name overrides first
-        if product_name in PRODUCT_IMAGE_OVERRIDES:
-            return PRODUCT_IMAGE_OVERRIDES[product_name]
-
-        name_lower = product_name.lower()
-        for keyword, unsplash_term in PRODUCT_IMAGE_KEYWORDS.items():
-            if keyword in name_lower:
-                return f"https://source.unsplash.com/400x400/?{unsplash_term}"
-        # fallback by category
-        cat_fallbacks = {
-            "Category A: Food": "organic+food",
-            "Category B: Natural Cosmetics": "natural+cosmetics",
-            "Category C: Spirituals": "spiritual+meditation",
-            "Category D: Sara Nursery": "herbal+plant",
-        }
-        term = cat_fallbacks.get(cat_name, "natural+organic")
-        return f"https://source.unsplash.com/400x400/?{term}"
+    def get_image_url(product_name: str, cat_name: str, sub_name: str = "") -> str:
+        return resolve_product_image_url(product_name, cat_name, sub_name)
 
     def get_or_create_category(name: str, parent_id):
         cur.execute("SELECT id FROM categories WHERE name=%s AND parent_id <=> %s LIMIT 1", (name, parent_id))
@@ -718,21 +573,40 @@ def setup():
         cur.execute("INSERT INTO categories (name, parent_id) VALUES (%s, %s)", (name, parent_id))
         return cur.lastrowid
 
+    def normalize_product_name(name: str) -> str:
+        # Keep upsert matching consistent across reruns
+        return " ".join((name or "").strip().split())
+
     def get_product_id_by_name(name: str):
         cur.execute("SELECT id FROM products WHERE name=%s LIMIT 1", (name,))
         row = cur.fetchone()
         return row[0] if row else None
 
+    def get_counts():
+        cur2 = conn.cursor()
+        try:
+            cur2.execute("SELECT COUNT(*) FROM categories")
+            cats_total = cur2.fetchone()[0]
+            cur2.execute("SELECT COUNT(*) FROM categories WHERE parent_id IS NOT NULL")
+            subs_total = cur2.fetchone()[0]
+            cur2.execute("SELECT COUNT(*) FROM products")
+            prods_total = cur2.fetchone()[0]
+            return cats_total, subs_total, prods_total
+        finally:
+            cur2.close()
+
     for cat_name, subcats in CATALOG.items():
         parent_id = get_or_create_category(cat_name, None)
+
 
         for sub_name, products in subcats.items():
             sub_id = get_or_create_category(sub_name, parent_id)
             for pname in products:
+                pname = normalize_product_name(pname)
                 benefits = get_benefits(pname)
                 price = get_price(pname)
                 effects = "Natural and safe for regular use. Consult a healthcare provider for medicinal use."
-                img_url = get_image_url(pname, cat_name)
+                img_url = get_image_url(pname, cat_name, sub_name)
 
                 existing_pid = get_product_id_by_name(pname)
                 if existing_pid:
@@ -745,6 +619,7 @@ def setup():
                         "INSERT INTO products (category_id, name, benefits, effects, price, image_url) VALUES (%s,%s,%s,%s,%s,%s)",
                         (sub_id, pname, benefits, effects, price, img_url),
                     )
+
 
     # Seed admin user
     # When running this file directly inside Docker, `backend` isn't a package.
@@ -760,9 +635,13 @@ def setup():
                     ("System Admin", admin_email, hashed, "admin", 1))
         print(f"Seeded default admin: {admin_email}")
 
+    # Commit and print verification counts
     conn.commit()
+    cats_total, subs_total, prods_total = get_counts()
+    print(f"Catalog seeded/updated successfully! categories={cats_total} subcategories={subs_total} products={prods_total}")
+
     conn.close()
-    print("Catalog seeded/updated successfully!")
+
 
 
 if __name__ == "__main__":

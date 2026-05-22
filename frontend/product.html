@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Product | Sara Foods</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=responsive1">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-container">
+    <a href="/" class="logo"><img src="avatar.png" alt="Sara Foods"><span>Sara Foods</span></a>
+    <nav class="nav-desktop-only">
+      <a href="/">Home</a>
+      <a href="products.html" class="active">Shop</a>
+      <a href="about.html">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="cart-btn" id="cart-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        Cart <span class="cart-badge">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="product-detail-page">
+  <div class="section-container" id="product-detail">
+    <p class="gallery-empty">Loading product…</p>
+  </div>
+</main>
+
+<div id="cart-drawer" class="cart-drawer hidden">
+  <div class="cart-header"><span>🛒 Your Selection</span><button id="cart-close">✕</button></div>
+  <div id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total" id="cart-total">Total: Rs. 0</div>
+    <button class="checkout-btn">Proceed to Checkout</button>
+  </div>
+</div>
+
+<div id="chat-toggle" class="chat-toggle"><img src="avatar.png" alt="Sara AI"></div>
+<div id="chat-widget" class="chat-container hidden">
+  <div class="chat-header">
+    <div class="header-info">
+      <div class="header-avatar-container"><img src="avatar.png" class="header-avatar" alt="Sara AI"><span class="online-dot"></span></div>
+      <div class="header-text"><h1>Sara AI</h1><p>Wellness Assistant</p></div>
+    </div>
+    <button class="close-btn" id="close-chat">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="message bot-message"><strong>Namaste!</strong> Ask about this product or our catalog.</div>
+  </div>
+  <div class="typing" id="typing-indicator">Sara AI is thinking...</div>
+  <div class="chat-input-area">
+    <div class="input-wrapper"><input id="user-input" type="text" placeholder="Ask Sara AI..." autocomplete="off"></div>
+    <button id="send-btn">Send</button>
+  </div>
+</div>
+
+<script src="js/site.js"></script>
+<script src="js/images.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/chatbot-widget.js?v=fix5"></script>
+<script src="js/main.js"></script>
+<script src="js/product-detail.js?v=fix5"></script>
+</body>
+</html>

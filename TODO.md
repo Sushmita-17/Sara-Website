@@ -1,27 +1,12 @@
-# TODO - Add full product catalog (Food/Cosmetics/Spirituals/Nursery) with images
+# TODO
 
-## Step 1: Verify current setup
-- [x] Read existing frontend product rendering logic
-- [x] Read backend `/products` endpoint logic
-- [x] Inspect current DB schema + seeding script (`backend/setup_db.py`)
+- [ ] Fix Shop (products.html + products.js) so category-wise tabs show correct products AND images.
+- [ ] Backend products endpoint should return per-subcategory product images already category-wise (done check).
+- [ ] Ensure frontend uses product.image_url directly (no wrong global replace).
+- [ ] If some category images are coming wrong, update backend mapping using backend/product_images.py (replace image_url assignment).
+- [x] Backend images come from DB product.image_url and store_link mapping.
+- [x] Fix wrong image assignment in DB generation (setup_db / image resolver) using backend/product_images.py (category/subcategory wise).
 
-## Step 2: Implement catalog update
-- [ ] Update `backend/setup_db.py` so it seeds/updates ALL products from the provided lists
-- [ ] Ensure `image_url` is set to a placeholder (since images were not provided) for every product
-- [ ] Fix/normalize names so duplicates/misspellings in lists are consistent
-
-## Step 3: Seed safely
-- [x] Modify seeding logic to be idempotent (avoid skipping when products exist)
-- [x] Add a small update strategy: insert missing categories/products; optionally update image_url/price/benefits
-
-
-## Step 4: Run & verify
-- [ ] Run backend or `setup_db.py` to seed DB
-- [ ] Verify `/api/products` returns full category tree and products
-- [ ] Open `frontend/products.html` and confirm filtering works
-
-## Step 5: Fix DB setup connectivity issues
-- [x] Update `backend/setup_db.py` to add connection diagnostics (host/user/db/port) and a short retry
-- [ ] Rerun `python backend/setup_db.py` and confirm DB seed completes
+- [ ] Run server and verify: Food shows food images, Natural Cosmetics shows cosmetics images, etc.
 
 

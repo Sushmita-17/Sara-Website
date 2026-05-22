@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:8000/api";
+const API_BASE = window.SARA_API || ((window.location.origin || 'http://localhost:8000') + '/api');
+var I = window.SaraImages || { productImg: function(u,n){ return u; }, DEFAULT: 'https://saraworldwide.com.np/wp-content/uploads/2024/08/moringa.jpg' };
 
 // Cart drawer toggle
 window.addEventListener('DOMContentLoaded', function() {
@@ -20,65 +21,182 @@ window.filterCategory = function(cat) {
     // TODO: filter product cards by category
 };
 
-// Hardcoded product fallback (works without MySQL)
+function saraImg(url, name) {
+    return I.productImg(url || I.DEFAULT, name || '');
+}
+
+// Hardcoded fallback (saraworldwide.com.np images only)
 const FALLBACK_PRODUCTS = [
-    { name: "Chia Seed", category: "Seeds", img: "bg.png", price: 350 },
-    { name: "Moringa Powder", category: "Powder", img: "prod_moringa.png", price: 450 },
-    { name: "Ashwagandha Powder", category: "Powder", img: "bg.png", price: 550 },
-    { name: "Black Seed Oil", category: "Oil", img: "bg.png", price: 650 },
-    { name: "Coconut Oil", category: "Oil", img: "bg.png", price: 400 },
-    { name: "Lavender Oil", category: "Essential Oil", img: "bg.png", price: 800 },
-    { name: "Wild Honey", category: "Himali Products", img: "bg.png", price: 1200 },
-    { name: "Shilajit", category: "Himali Products", img: "bg.png", price: 2500 },
-    { name: "Aloevera Fresh Juice", category: "Juices & Detox Water", img: "bg.png", price: 300 },
-    { name: "Spirulina Powder", category: "Powder", img: "bg.png", price: 700 },
-    { name: "Turmeric Powder", category: "Powder", img: "bg.png", price: 200 },
-    { name: "Brahmi Powder", category: "Powder", img: "bg.png", price: 300 }
+    { name: "Chia seed", category: "Seeds", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2017/04/unnamed-1-scaled.jpg'), price: 350 },
+    { name: "Moringa powder", category: "Powder", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2024/08/moringa.jpg'), price: 450 },
+    { name: "Ashwagandha powder", category: "Powder", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2017/11/ashawagandha-powder.jpg'), price: 550 },
+    { name: "Black seed oil", category: "Oil", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2017/09/black-scaled-e1745215640698.jpg'), price: 650 },
+    { name: "Coconut oil", category: "Oil", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2017/11/coconut-oil-latest.jpg'), price: 400 },
+    { name: "Lavender oil", category: "Essential Oil", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2021/07/Lavender-Oil_front.png'), price: 800 },
+    { name: "Wild Honey", category: "Himali Products", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2025/02/wh.jpg'), price: 1200 },
+    { name: "Shilajit", category: "Himali Products", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2024/06/shw.jpg'), price: 2500 },
+    { name: "Aloevera fresh juice", category: "Juices & Detox Water", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2022/06/287329122_4928240767282481_4667855119876077382_n-1.jpg'), price: 300 },
+    { name: "Spirulina powder", category: "Powder", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2017/04/index.jpg'), price: 700 },
+    { name: "Turmeric powder", category: "Powder", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2020/08/wild-turmeric-new...............jpg'), price: 200 },
+    { name: "Brahmi Powder", category: "Powder", img: saraImg('https://saraworldwide.com.np/wp-content/uploads/2019/09/brahami-powder.png'), price: 300 }
 ];
+
+var allFeaturedItems = [];
+var featuredShown = 0;
+var featuredCatFilter = 'all';
+var FEATURED_PAGE = 24;
+var Catalog = window.SaraCatalog;
+
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getFeaturedFiltered() {
+    if (featuredCatFilter === 'all') return allFeaturedItems;
+    return allFeaturedItems.filter(function (item) {
+        return item.catLetter === featuredCatFilter;
+    });
+}
+
+function renderFeaturedBatch(grid, append) {
+    var pool = getFeaturedFiltered();
+    if (!append) {
+        grid.innerHTML = '';
+        featuredShown = 0;
+    }
+    var next = pool.slice(featuredShown, featuredShown + FEATURED_PAGE);
+
+    next.forEach(function(item) {
+        var card = document.createElement('div');
+        card.className = 'product-card';
+        var imgRaw = item.original_image || item.img;
+        var imgUrl = saraImg(imgRaw, item.name);
+        var detailUrl = Catalog ? Catalog.productPageUrl(item.name) : ('product.html?name=' + encodeURIComponent(item.name));
+        var storeLink = item.link || 'https://saraworldwide.com.np/';
+        var badge = item.badge || (Catalog ? Catalog.catLabel(item.catLetter) : '');
+
+        card.innerHTML =
+            '<a href="' + escHtml(detailUrl) + '" class="product-card-link" title="' + escHtml(item.name) + '">' +
+            '<div class="p-img"><img src="' + imgUrl + '" alt="' + escHtml(item.name) + '" decoding="async" referrerpolicy="no-referrer">' +
+            (badge ? '<span class="p-badge">' + escHtml(badge) + '</span>' : '') +
+            '</div>' +
+            '<div class="p-info"><h3>' + escHtml(item.name) + '</h3>' +
+            (badge ? '<p class="p-cat">' + escHtml(badge) + '</p>' : '') +
+            '<span class="price">Rs. ' + (item.price || 450) + '</span>' +
+            '<span class="catalog-card-link">View product photo →</span>' +
+            '</div></a>' +
+            '<div class="p-card-actions featured-card-actions">' +
+            '<button type="button" class="add-to-cart" data-name="' + escHtml(item.name) + '" data-price="' + (item.price || 450) + '">Add to Cart</button>' +
+            '</div>';
+        grid.appendChild(card);
+        var btn = card.querySelector('.add-to-cart');
+        if (btn && window.addToCart) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.addToCart(item.name, item.price || 450);
+            });
+        }
+        var imgEl = card.querySelector('img');
+        if (imgEl && I.attachImgFallback) I.attachImgFallback(imgEl, item.name, imgRaw);
+    });
+
+    featuredShown += next.length;
+
+    // Update or create load-more button
+    var loadMoreBtn = document.getElementById('featured-load-more');
+    if (!loadMoreBtn) {
+        var ctaDiv = document.querySelector('.index-featured-cta');
+        if (ctaDiv) {
+            loadMoreBtn = document.createElement('button');
+            loadMoreBtn.type = 'button';
+            loadMoreBtn.className = 'cta-btn';
+            loadMoreBtn.id = 'featured-load-more';
+            loadMoreBtn.textContent = 'Load more products';
+            loadMoreBtn.style.marginRight = '12px';
+            loadMoreBtn.addEventListener('click', function() { renderFeaturedBatch(grid, true); });
+            ctaDiv.insertBefore(loadMoreBtn, ctaDiv.firstChild);
+        }
+    }
+    var pool = getFeaturedFiltered();
+    if (loadMoreBtn) {
+        loadMoreBtn.style.display = featuredShown >= pool.length ? 'none' : 'inline-flex';
+    }
+
+    var countEl = document.getElementById('featured-count');
+    if (!countEl) {
+        var header = document.querySelector('#featured .section-header');
+        if (header) {
+            countEl = document.createElement('p');
+            countEl.id = 'featured-count';
+            countEl.className = 'section-sub';
+            countEl.style.fontSize = '13px';
+            countEl.style.opacity = '0.7';
+            header.appendChild(countEl);
+        }
+    }
+    if (countEl) {
+        countEl.textContent = 'Showing ' + featuredShown + ' of ' + pool.length + ' in this collection';
+    }
+}
+
+function initFeaturedCategoryTabs() {
+    var tabs = document.getElementById('featured-cat-tabs');
+    if (!tabs) return;
+    tabs.addEventListener('click', function (e) {
+        var btn = e.target.closest('.featured-cat');
+        if (!btn) return;
+        featuredCatFilter = btn.getAttribute('data-cat') || 'all';
+        featuredShown = 0;
+        tabs.querySelectorAll('.featured-cat').forEach(function (b) {
+            b.classList.remove('active');
+        });
+        btn.classList.add('active');
+        var grid = document.getElementById('main-product-grid');
+        if (grid) renderFeaturedBatch(grid, false);
+    });
+}
 
 function loadEcomProducts() {
     var grid = document.getElementById('main-product-grid');
     if (!grid) return;
 
-    // Try API first
-    fetch(API_BASE + '/products')
-        .then(function(res) {
-            if (!res.ok) throw new Error('API error');
-            return res.json();
-        })
-        .then(function(categories) {
-            if (!Array.isArray(categories)) throw new Error('Not an array');
-            grid.innerHTML = '';
-            var count = 0;
-            categories.forEach(function(cat) {
-                cat.children.forEach(function(sub) {
-                    sub.products.slice(0, 3).forEach(function(p) {
-                        if (count >= 12) return;
-                        count++;
-                        var card = document.createElement('div');
-                        card.className = 'product-card';
-                        card.innerHTML = '<div class="p-img"><img src="bg.png" alt="' + p.name + '"></div>' +
-                            '<div class="p-info"><h3>' + p.name + '</h3><p>' + sub.name + '</p>' +
-                            '<div class="p-bottom"><span class="price">Rs. 450</span>' +
-                            '<button class="add-to-cart">Add to Cart</button></div></div>';
-                        grid.appendChild(card);
-                    });
+    initFeaturedCategoryTabs();
+
+    var load = Catalog && Catalog.loadCatalog
+        ? Catalog.loadCatalog()
+        : fetch(API_BASE + '/catalog').then(function (r) { return r.ok ? r.json() : null; });
+
+    load.then(function (data) {
+        if (!data || !data.products) {
+            FALLBACK_PRODUCTS.forEach(function (p) {
+                allFeaturedItems.push({
+                    name: p.name,
+                    img: p.img,
+                    original_image: p.img,
+                    badge: p.category,
+                    catLetter: 'A',
+                    link: 'https://saraworldwide.com.np/',
+                    price: p.price || 450
                 });
             });
-        })
-        .catch(function() {
-            // Fallback: show hardcoded products
-            grid.innerHTML = '';
-            FALLBACK_PRODUCTS.forEach(function(p) {
-                var card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = '<div class="p-img"><img src="' + p.img + '" alt="' + p.name + '"></div>' +
-                    '<div class="p-info"><h3>' + p.name + '</h3><p>' + p.category + '</p>' +
-                    '<div class="p-bottom"><span class="price">Rs. ' + p.price + '</span>' +
-                    '<button class="add-to-cart" onclick="addToCart(\'' + p.name + '\', ' + p.price + ')">Add to Cart</button></div></div>';
-                grid.appendChild(card);
+        } else {
+            data.products.forEach(function (p) {
+                allFeaturedItems.push({
+                    name: p.name,
+                    img: p.original_image || p.image_url,
+                    original_image: p.original_image || p.image_url,
+                    badge: Catalog ? Catalog.catLabel(p.cat_letter) : p.cat,
+                    catLetter: p.cat_letter || 'A',
+                    link: p.store_link || 'https://saraworldwide.com.np/',
+                    price: p.price || 450
+                });
             });
-        });
+        }
+        renderFeaturedBatch(grid, false);
+    }).catch(function () {
+        renderFeaturedBatch(grid, false);
+    });
 }
 
 // Cart
@@ -102,172 +220,7 @@ function showCartNotification(name) {
     setTimeout(function() { notif.remove(); }, 2500);
 }
 
-// Chatbot
-function initChatbot() {
-    var chatToggle = document.getElementById('chat-toggle');
-    var chatWidget = document.getElementById('chat-widget');
-    var closeChat = document.getElementById('close-chat');
-    var userInput = document.getElementById('user-input');
-    var sendBtn = document.getElementById('send-btn');
-    var typingIndicator = document.getElementById('typing-indicator');
-    var chatMessages = document.getElementById('chat-messages');
-
-    if (!chatToggle || !chatWidget) {
-        console.error('Chat elements not found!');
-        return;
-    }
-
-    chatToggle.addEventListener('click', function() {
-        chatWidget.style.display = 'flex';
-        chatWidget.classList.remove('hidden');
-        chatToggle.style.display = 'none';
-    });
-
-    closeChat.addEventListener('click', function() {
-        chatWidget.style.display = 'none';
-        chatWidget.classList.add('hidden');
-        chatToggle.style.display = 'flex';
-    });
-
-    function addMessage(text, isBot) {
-        var msgDiv = document.createElement('div');
-        msgDiv.className = 'message ' + (isBot !== false ? 'bot-message' : 'user-message');
-        msgDiv.innerHTML = text;
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function showTyping(show) {
-        if (typingIndicator) typingIndicator.style.display = show ? 'block' : 'none';
-    }
-
-    function handleSearch(query) {
-        var q = query.toLowerCase().trim();
-        showTyping(true);
-
-        // Small talk
-        if (q === 'hi' || q === 'hello' || q === 'hey') {
-            setTimeout(function() {
-                addMessage("Hi there! I'm doing great, thank you! 😊 How can I help you with Sara World Business products today?");
-                showTyping(false);
-            }, 800);
-            return;
-        }
-
-        if (q.includes('how are you')) {
-            setTimeout(function() {
-                addMessage("I'm perfectly fine and ready to help! Feel free to ask me about our organic products, location, or anything else! 🌿");
-                showTyping(false);
-            }, 800);
-            return;
-        }
-
-        // Location with Map
-        if (q.includes('location') || q.includes('where') || q.includes('contact') || q.includes('info')) {
-            setTimeout(function() {
-                addMessage('<strong>Sara World Business Pvt. Ltd.</strong><br>' +
-                    '📍 Kalanki-14, Kathmandu, Nepal<br>' +
-                    '📞 +977 1 5225181 | +977 9851105234<br>' +
-                    '📧 info@saraworldwide.com.np<br>' +
-                    '🌐 <a href="https://saraworldwide.com.np/saraworldwide" target="_blank">Website</a> | ' +
-                    '<a href="https://www.facebook.com/saraworldwide.com.np/" target="_blank">Facebook</a>' +
-                    '<div style="margin-top:10px;border-radius:10px;overflow:hidden;">' +
-                    '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.8344158226!2d85.2818!3d27.6932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb18635848c087%3A0x67399426f4370597!2sKalanki%2C%20Kathmandu!5e0!3m2!1sen!2snp" ' +
-                    'width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe></div>');
-                showTyping(false);
-            }, 800);
-            return;
-        }
-
-        // Stats
-        if (q.includes('total') || q.includes('how many') || q.includes('stats')) {
-            fetch(API_BASE + '/products/stats')
-                .then(function(r) { return r.json(); })
-                .then(function(stats) {
-                    addMessage('We have <strong>' + stats.total_products + ' products</strong> across ' + stats.total_categories + ' categories!<br>' +
-                        'See them all on our <a href="https://saraworldwide.com.np/saraworldwide" target="_blank">website</a>!');
-                })
-                .catch(function() {
-                    addMessage('We have over <strong>300+ products</strong> across 4 main categories — Food, Cosmetics, Spirituals & Nursery.<br>' +
-                        'See them all on our <a href="https://saraworldwide.com.np/saraworldwide" target="_blank">website</a> & <a href="https://www.facebook.com/saraworldwide.com.np/" target="_blank">Facebook</a>!');
-                })
-                .finally(function() { showTyping(false); });
-            return;
-        }
-
-        // Product list
-        if (q.includes('list') || q.includes('show all') || q.includes('all products') || q.includes('products')) {
-            setTimeout(function() {
-                var html = 'We have products in these categories:<br>';
-                html += '<div class="category-title">🌿 Category A - Food</div>';
-                html += 'Seeds, Powders, Oils, Essential Oils, Medicinal Herbs, Himali Products, Juices, Microgreens, Dehydrated Fruits & Vegs, Millets & More!<br><br>';
-                html += '<div class="category-title">💄 Category B - Natural Cosmetics</div>';
-                html += 'Oils, Soaps, Perfumes, Hair & Skin Care Products<br><br>';
-                html += '<div class="category-title">🙏 Category C - Spirituals</div>';
-                html += 'Rudraksha, Gems, Stones, Idols & More<br><br>';
-                html += '<div class="category-title">🌱 Category D - Sara Nursery</div>';
-                html += 'Herbal Plants & Fruit Plants<br><br>';
-                html += '<em>Explore all products at our <a href="https://saraworldwide.com.np/saraworldwide" target="_blank">website</a> or <a href="https://www.facebook.com/saraworldwide.com.np/" target="_blank">Facebook</a>!</em>';
-                addMessage(html);
-                showTyping(false);
-            }, 800);
-            return;
-        }
-
-        // Specific product
-        fetch(API_BASE + '/product/' + encodeURIComponent(query))
-            .then(function(r) {
-                if (!r.ok) throw new Error('Not found');
-                return r.json();
-            })
-            .then(function(detail) {
-                addMessage('<strong>' + detail.name + '</strong> (' + detail.category + ')<br><br>' +
-                    '<strong>Benefits:</strong> ' + detail.benefits + '<br>' +
-                    '<strong>Effects:</strong> ' + detail.effects + '<br><br>' +
-                    '<em>Find more at our <a href="https://saraworldwide.com.np/saraworldwide" target="_blank">website</a>.</em>');
-            })
-            .catch(function() {
-                // Fallback: check hardcoded products
-                var found = FALLBACK_PRODUCTS.find(function(p) {
-                    return p.name.toLowerCase().includes(q) || q.includes(p.name.toLowerCase());
-                });
-                if (found) {
-                    addMessage('<strong>' + found.name + '</strong> (' + found.category + ')<br><br>' +
-                        'This is a premium organic product from Sara World Business. ' +
-                        'Rich in natural nutrients and ideal for everyday wellness!<br><br>' +
-                        '<em>Find more at our <a href="https://saraworldwide.com.np/saraworldwide" target="_blank">website</a>.</em>');
-                } else {
-                    addMessage("I'm not sure about that one. Try clicking <strong>Products List</strong> or visit our <a href='https://www.facebook.com/saraworldwide.com.np/' target='_blank'>Facebook Page</a>!");
-                }
-            })
-            .finally(function() { showTyping(false); });
-    }
-
-    sendBtn.addEventListener('click', function() {
-        var text = userInput.value.trim();
-        if (!text) return;
-        addMessage(text, false);
-        userInput.value = '';
-        handleSearch(text);
-    });
-
-    userInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') sendBtn.click();
-    });
-
-    window.quickReply = function(text) {
-        addMessage(text, false);
-        handleSearch(text);
-    };
-
-    window.askProduct = function(name) {
-        addMessage(name, false);
-        handleSearch(name);
-    };
-}
-
-// Initialize everything
+// Initialize homepage catalog (chatbot: js/chatbot-widget.js)
 window.addEventListener('DOMContentLoaded', function() {
     loadEcomProducts();
-    initChatbot();
 });
