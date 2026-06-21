@@ -1,0 +1,32 @@
+services:
+  # ── Backend Web Service ─────────────────────────────────────────────────────
+  - type: web
+    name: sara-backend
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DB_HOST
+        value: 127.0.0.1
+      - key: DB_USER
+        value: root
+      - key: DB_NAME
+        value: sara_chatbot_db
+      - key: DB_PORT
+        value: "3306"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # ── Frontend Static Site ────────────────────────────────────────────────────
+  - type: static
+    name: sara-frontend
+    publishPath: frontend
+    routes:
+      # Proxy all API requests to the backend service
+      - type: rewrite
+        source: /api/*
+        destination: https://sara-backend.onrender.com/api/*
