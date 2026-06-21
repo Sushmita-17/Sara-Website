@@ -1,0 +1,20 @@
+# Netlify deployment configuration for Sara Worldwide Chatbot
+
+[build]
+  # Tell Netlify that the website's static HTML/CSS/JS files are in the frontend folder
+  publish = "frontend"
+
+# API Redirect/Proxy rule:
+# Since Netlify only hosts static files, your FastAPI Python backend needs to be hosted 
+# on a backend hosting service (like Render, Railway, Fly.io, or VPS).
+#
+# Once your backend is deployed, replace the placeholder URL below with your actual backend API URL.
+# For example, if your backend is hosted on Render, change the "to" URL to:
+# to = "https://sara-chatbot-backend.onrender.com/api/:splat"
+#
+# This proxy redirect prevents CORS issues and allows the frontend to call '/api/...' directly.
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:8000/api/:splat"
+  status = 200
+  force = true

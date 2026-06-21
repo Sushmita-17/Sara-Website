@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sara Foods - Organic Store</title>
+<style>
+  /* ===== INTENTIONALLY BASIC / OUTDATED DESIGN ===== */
+  * { margin: 0; padding: 0; }
+  body {
+    font-family: Times New Roman, serif;
+    color: #333;
+    background: #fff;
+  }
+
+  /* --- NAVBAR --- */
+  .navbar {
+    background: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .navbar .logo {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    margin-right: 10px;
+  }
+  .navbar a {
+    color: blue;
+    text-decoration: underline;
+    font-size: 14px;
+    margin-right: 6px;
+  }
+  .navbar a:hover { color: purple; }
+
+  /* --- HERO --- */
+  .hero {
+    background: #008000;
+    color: #fff;
+    padding: 30px 20px;
+    text-align: left;
+  }
+  .hero h1 {
+    font-size: 22px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
+  }
+  .hero p {
+    font-size: 13px;
+    margin-bottom: 12px;
+    color: #e0e0e0;
+  }
+  .hero button {
+    background: #fff;
+    color: #008000;
+    border: 1px solid #666;
+    padding: 6px 16px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  /* --- PRODUCTS --- */
+  .section-title {
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    padding: 15px 20px 5px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+  .products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 20px;
+  }
+  .product-card {
+    border: 1px solid #999;
+    padding: 10px;
+    width: 180px;
+    background: #fafafa;
+    font-size: 13px;
+  }
+  .product-card .img-placeholder {
+    width: 100%;
+    height: 100px;
+    background: #ddd;
+    border: 1px dashed #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .product-card h3 {
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 4px;
+  }
+  .product-card a {
+    color: blue;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  /* --- CATEGORIES --- */
+  .categories {
+    padding: 10px 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cat-box {
+    border: 1px solid #999;
+    padding: 12px 18px;
+    background: #f0f0f0;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+
+  /* --- REVIEWS --- */
+  .reviews {
+    padding: 10px 20px;
+  }
+  .review {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    background: #fefefe;
+  }
+  .review .stars { color: #cc9900; font-size: 12px; }
+  .review strong { font-size: 12px; color: #555; }
+
+  /* --- CONTACT --- */
+  .contact {
+    background: #f5f5f5;
+    border-top: 1px solid #ccc;
+    padding: 15px 20px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .contact h2 {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .contact a { color: blue; }
+
+  /* --- FOOTER --- */
+  .footer {
+    background: #e0e0e0;
+    padding: 10px 20px;
+    font-size: 11px;
+    color: #777;
+    border-top: 1px solid #bbb;
+  }
+
+  /* --- NO CHATBOT, NO SOCIAL SIDEBAR --- */
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <span class="logo">Sara Foods</span>
+  <a href="#">Home</a>
+  <a href="#">Shop</a>
+  <a href="#">About</a>
+  <a href="#">Contact</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Sara Foods - Organic Health Store</h1>
+  <p>We sell organic food products from Nepal</p>
+  <button>View Products</button>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section-title">Products</div>
+<div class="products">
+  <div class="product-card">
+    <div class="img-placeholder">[No Image]</div>
+    <h3>Moringa Powder</h3>
+    <a href="#">Buy Now</a>
+  </div>
+  <div class="product-card">
+    <div class="img-placeholder">[No Image]</div>
+    <h3>Shilajit</h3>
+    <a href="#">Buy Now</a>
+  </div>
+  <div class="product-card">
+    <div class="img-placeholder">[No Image]</div>
+    <h3>Wild Honey</h3>
+    <a href="#">Buy Now</a>
+  </div>
+  <div class="product-card">
+    <div class="img-placeholder">[No Image]</div>
+    <h3>Ginseng</h3>
+    <a href="#">Buy Now</a>
+  </div>
+  <div class="product-card">
+    <div class="img-placeholder">[No Image]</div>
+    <h3>Chia Seeds</h3>
+    <a href="#">Buy Now</a>
+  </div>
+  <div class="product-card">
+    <div class="img-placeholder">[No Image]</div>
+    <h3>Aloe Vera Gel</h3>
+    <a href="#">Buy Now</a>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="section-title">Categories</div>
+<div class="categories">
+  <div class="cat-box">Organic Food</div>
+  <div class="cat-box">Natural Cosmetics</div>
+  <div class="cat-box">Spiritual Items</div>
+  <div class="cat-box">Nursery Plants</div>
+</div>
+
+<!-- REVIEWS -->
+<div class="section-title">Customer Reviews</div>
+<div class="reviews">
+  <div class="review">
+    <div class="stars">★★★★★</div>
+    <p>Good products. Thanks.</p>
+    <strong>— Shyam Kumar</strong>
+  </div>
+  <div class="review">
+    <div class="stars">★★★★☆</div>
+    <p>Nice organic food store in Kalanki.</p>
+    <strong>— Ram Kumar</strong>
+  </div>
+  <div class="review">
+    <div class="stars">★★★★★</div>
+    <p>Quality products available here.</p>
+    <strong>— Kiran Pahadi</strong>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact">
+  <h2>Contact Us</h2>
+  <p>Sara Worldwide Business Pvt. Ltd.</p>
+  <p>Address: Kalanki-14, Kathmandu, Nepal</p>
+  <p>Phone: +977 1 5225181</p>
+  <p>Email: <a href="#">info@saraworldwide.com.np</a></p>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  &copy; 2024 Sara Foods | Kalanki, Kathmandu
+</div>
+
+</body>
+</html>

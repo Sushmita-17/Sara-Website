@@ -1,0 +1,4 @@
+# API Redirect/Proxy rule for Netlify
+# If you drag and drop the 'frontend' folder directly to Netlify, this file will configure the API redirect.
+# Replace the placeholder URL with your actual backend URL once deployed.
+/api/*  http://localhost:8000/api/:splat  200!

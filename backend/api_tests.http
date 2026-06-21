@@ -1,0 +1,97 @@
+### LO5 - API Testing Evidence (Alternative to Postman)
+### You can take a screenshot of this file to show your API Testing!
+
+@baseUrl = http://localhost:8000
+
+# Paste/Update your access token here if the endpoint needs auth
+@accessToken = {{ $dotenv ACCESS_TOKEN }}
+
+
+---
+### 1. GET ALL PRODUCTS
+GET {{baseUrl}}/api/products
+Accept: application/json
+
+###
+
+---
+### 2. GET SINGLE PRODUCT
+GET {{baseUrl}}/api/product/Moringa
+Accept: application/json
+
+###
+
+---
+### 3. GET COMPANY INFO
+GET {{baseUrl}}/api/info
+Accept: application/json
+
+###
+
+---
+### 4. POST AI CHATBOT MESSAGE
+POST {{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+  "message": "What are the benefits of Shilajit?"
+}
+
+###
+
+---
+### 5. POST FEEDBACK
+POST {{baseUrl}}/api/feedback
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "rating": 5,
+  "message": "This is a test feedback from API testing."
+}
+
+###
+
+---
+### 5b. (Update example) POST /api/admin/users/{user_id}/role  (admin/staff only)
+# Your code updates user role via POST (not HTTP PUT)
+POST {{baseUrl}}/api/admin/users/1/role
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "role": "staff"
+}
+
+###
+
+
+---
+### 6. GET FEEDBACK LIST
+GET {{baseUrl}}/api/feedback
+Accept: application/json
+
+###
+
+---
+### 7. POST REGISTER USER
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+
+{
+  "full_name": "API Test User",
+  "email": "apitest@example.com",
+  "password": "securepassword123"
+}
+
+###
+
+---
+### 8. POST LOGIN USER
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=apitest@example.com&password=securepassword123
+
