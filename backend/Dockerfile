@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r /workspace/backend/requirements.txt
 
 # Copy app source (keep backend/ package layout for imports)
 COPY backend /workspace/backend
-COPY frontend /frontend
+COPY build /build
 
 EXPOSE 8000
 

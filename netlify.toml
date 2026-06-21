@@ -2,7 +2,7 @@
 
 [build]
   # Tell Netlify that the website's static HTML/CSS/JS files are in the frontend folder
-  publish = "frontend"
+  publish = "build"
 
 # API Redirect/Proxy rule:
 # Since Netlify only hosts static files, your FastAPI Python backend needs to be hosted 

@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "outputDirectory": "frontend",
+  "outputDirectory": "build",
   "rewrites": [
     {
       "source": "/api/:path*",

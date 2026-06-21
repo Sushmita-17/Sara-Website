@@ -24,7 +24,7 @@ services:
   # ── Frontend Static Site ────────────────────────────────────────────────────
   - type: static
     name: sara-frontend
-    publishPath: frontend
+    publishPath: build
     routes:
       # Proxy all API requests to the backend service
       - type: rewrite
