@@ -2,20 +2,12 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "http://localhost:8000/api/$1"
+      "source": "/api/:path*",
+      "destination": "http://localhost:8000/api/:path*"
     },
     {
-      "source": "/(css|js|partials|.*\\.html|.*\\.png|.*\\.svg|.*\\.css|.*\\.js)",
-      "destination": "/frontend/$1"
-    },
-    {
-      "source": "/",
-      "destination": "/frontend/index.html"
-    },
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/frontend/$1"
+      "source": "/:path*",
+      "destination": "/frontend/:path*"
     }
   ]
 }
