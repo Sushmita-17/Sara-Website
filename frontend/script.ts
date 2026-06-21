@@ -167,3 +167,6 @@ sendBtn.addEventListener('click', () => {
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendBtn.click();
 });
+
+export {};
+
